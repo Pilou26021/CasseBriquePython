@@ -40,7 +40,11 @@ class Raquette:
     
     def tracer(self):
         tracerRaquette(fenetre, self)
-        
+
+    def collision(self,Balle):
+        if Balle.y+self.hauteur>=self.y and Balle.x+self.largeur>=self.x and Balle.x<=self.x+self.largeur:
+            Balle.dy=Balle.dy*-1
+
     
 """    
 class Grille:
@@ -58,6 +62,7 @@ while True:
     balle.tracer()
     raquette.tracer()
     balle.rebond()
+    raquette.collision(balle)
     if balle.horsjeux(raquette) == "perdu":
         print("perdu")
         pygame.quit()
