@@ -84,10 +84,12 @@ while True:
     raquette.tracer()
     balle.rebond()
     raquette.collision(balle)
-    if brique.collision(balle) == True:
-        brique.__del__()
     if brique.etat == True:
         brique.tracer()
+        brique.collision(balle)
+    else:
+        brique.__del__()
+    
     if balle.horsjeux(raquette) == "perdu":
         print("perdu")
         pygame.quit()
