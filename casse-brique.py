@@ -45,17 +45,38 @@ class Raquette:
         if Balle.y+self.hauteur>=self.y and Balle.x+self.largeur>=self.x and Balle.x<=self.x+self.largeur:
             Balle.dy=Balle.dy*-1
 
-    
+
+class Brique:
+    def __init__(self,x=100,y=100,taille=20):
+        self.x=x
+        self.y=y
+        self.taille=taille
+        self.etat=True
+    def tracer(self):
+        tracerBrique(fenetre,self)
+    def collision(self,balle):
+        if balle.y+self.taille>=self.y and balle.x+self.taille>=self.x and balle.x<=self.x+self.taille:
+            balle.dy=balle.dy*-1
+            return True
+    def __del__(self):
+        self.etat=False
+        pass
+
 """    
 class Grille:
-    
-class Brique:
 """
-        
+
+
+
+
+
+
+
 fenetre = ouvrir_fenetre(largeur_fenetre, hauteur_fenetre)
 balle=Balle(largeur_fenetre//2,hauteur_fenetre//4)
 raquette=Raquette()
 deplacementx=0
+brique=Brique(100,100,20)
 while True:
     effacer(fenetre)
     balle.avancer()
@@ -63,6 +84,10 @@ while True:
     raquette.tracer()
     balle.rebond()
     raquette.collision(balle)
+    if brique.collision(balle) == True:
+        brique.__del__()
+    if brique.etat == True:
+        brique.tracer()
     if balle.horsjeux(raquette) == "perdu":
         print("perdu")
         pygame.quit()
