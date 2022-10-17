@@ -44,7 +44,7 @@ class Raquette:
     def collision(self,Balle):
         if Balle.y+self.hauteur>=self.y and Balle.x+self.largeur>=self.x and Balle.x<=self.x+self.largeur:
             Balle.dy=Balle.dy*-1
-
+        #faut ajouter les rebonds sur les côtés de la raquette
 
 class Brique:
     def __init__(self,x=100,y=100,taille=20):
@@ -54,13 +54,10 @@ class Brique:
         self.etat=True
     def tracer(self):
         tracerBrique(fenetre,self)
-    def collision(self,balle):
-        if balle.y+self.taille>=self.y and balle.x+self.taille>=self.x and balle.x<=self.x+self.taille:
-            balle.dy=balle.dy*-1
-            return True
-    def __del__(self):
-        self.etat=False
-        pass
+    def collisionhb(self,balle):
+    #faut ajouter les rebonds sur les côtés gauche et droite de la brique
+    def collisionhb(self,balle):
+    #ajouter les rebonds sur les côtés haut et bas de la brique
 
 """    
 class Grille:
