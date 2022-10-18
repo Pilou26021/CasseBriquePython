@@ -17,6 +17,7 @@ class Balle:
     def avancer(self):
         self.x=self.x+self.dx
         self.y=self.y+self.dy
+        self.rebond()
     
     def tracer(self):
         tracerBalle(fenetre,self)
@@ -26,7 +27,7 @@ class Balle:
             self.dx=self.dx*-1
         if hauteur_fenetre-self.taille<self.y or self.y<0:
             self.dy=self.dy*-1
-           
+
     def horsjeux(self,raquette):
         if self.y>raquette.y:
             return "perdu"
@@ -39,12 +40,18 @@ class Raquette:
         self.hauteur=hauteurRaq
     
     def tracer(self):
+        if self.x<0:
+            self.x+=4
+        if self.x+self.largeur>=largeur_fenetre:
+            self.x-=4
         tracerRaquette(fenetre, self)
 
     def collision(self,Balle):
-        if Balle.y+self.hauteur>=self.y and Balle.x+self.largeur>=self.x and Balle.x<=self.x+self.largeur:
-            Balle.dy=Balle.dy*-1
-        #faut ajouter les rebonds sur les côtés de la raquette
+        if Balle.y+Balle.taille>=self.y and Balle.x+Balle.taille>=self.x and Balle.x<=self.x+self.largeur:
+            if Balle.y==self.y+self.hauteur or Balle.y+Balle.taille==self.y:
+                Balle.dy=Balle.dy*-1
+            else:
+                Balle.dx=Balle.dx*-1
 
 class Brique:
     def __init__(self,x=100,y=100,taille=20):
@@ -52,17 +59,37 @@ class Brique:
         self.y=y
         self.taille=taille
         self.etat=True
-    def tracer(self):
-        tracerBrique(fenetre,self)
-    def collisionhb(self,balle):
-    #faut ajouter les rebonds sur les côtés gauche et droite de la brique
-    def collisionhb(self,balle):
-    #ajouter les rebonds sur les côtés haut et bas de la brique
-
-"""    
+        
+    def tracer(self,Balle):
+        if self.etat==True:
+            self.collision(Balle)
+            tracerBrique(fenetre,self)
+        
+    def collision(self,balle):
+        if self.y+self.taille>=balle.y and self.y<=balle.y+balle.taille and self.x<=balle.x and self.x+self.taille>=balle.x:
+            if balle.y==self.y+self.taille or balle.y+balle.taille==self.y:
+                balle.dy=balle.dy*-1
+                self.etat=False
+            else:
+                balle.dx=balle.dx*-1
+                self.etat=False
+    
 class Grille:
-"""
-
+    def __init__(self,taille,tailleb):
+        x=100
+        y=75
+        self.grille=[]
+        while taille!=0:
+            if x>700:
+                x=100
+                y+=tailleb
+            self.grille.append(Brique(x,y,tailleb))
+            x+=tailleb+5
+            taille-=1
+    
+    def jeux(self,Balle):
+        for i in range(len(self.grille)):
+            self.grille[i].tracer(Balle)
 
 
 
@@ -73,20 +100,14 @@ fenetre = ouvrir_fenetre(largeur_fenetre, hauteur_fenetre)
 balle=Balle(largeur_fenetre//2,hauteur_fenetre//4)
 raquette=Raquette()
 deplacementx=0
-brique=Brique(100,100,20)
+grille=Grille(100,20)
 while True:
     effacer(fenetre)
     balle.avancer()
     balle.tracer()
     raquette.tracer()
-    balle.rebond()
     raquette.collision(balle)
-    if brique.etat == True:
-        brique.tracer()
-        brique.collision(balle)
-    else:
-        brique.__del__()
-    
+    grille.jeux(balle)
     if balle.horsjeux(raquette) == "perdu":
         print("perdu")
         pygame.quit()
@@ -105,7 +126,3 @@ while True:
                 deplacementx=4
         if event.type==KEYUP:
             deplacementx=0
-                
-                
-                
-                
